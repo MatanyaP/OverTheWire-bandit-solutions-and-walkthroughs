@@ -1,0 +1,150 @@
+# OverTheWire-bandit-solutions-and-walkthroughs
+Solutions to levels I've done so far, with short straightforward walkthroughs
+
+bandit0 -> bandit1:
+	# Just logging in with "bandit1@bandit.labs.overthewire.org -p 2220"
+	# Where <bandit1> is the username and <-p> is for specifying a port, which is 2220 in this case.
+	#
+	# boJ9jbbUNNfktd78OOpsqOltutMc3MY1
+
+
+bandit1 -> bandit2:
+	# Reading a file named - requires adding ./ before filename to specifically tell it's a file
+	# So "cat ./-" would read the file.
+	#
+	# CV1DtqXWVFXTvM2F0k09SHz0YwRINYA9
+
+
+bandit2 -> bandit3:
+	# Reading a filename with spaces requires adding a backslash after every word followed with a space character, to specify the next word is not a new command but a part of the filename.
+	# So "cat ./spaces\ in\ this\ filename" would read the file.
+	#
+	# UmHadQclWmgdLOKQ3YNgjWxGoRMb5luK
+
+
+bandit3 -> bandit4:
+	# Viewing a hidden file requires adding <-a> flag to the <ls> command
+	# "cd inhere" would redirect to the inhere directory 
+	# "ls -a" would  reveal a hidden file called '.hidden'
+	# "cat ./.hidden" would read the file
+	#
+	# pIwrPrtPN36QITSp3EQaw936yaFoFgAB
+
+
+bandit4 -> bandit5:
+	# Finding a human readable file would mean finding an ASCII file
+	# "file ./*" would reveal the files in directory and their types
+	# One file, named '-file07', is ASCII
+	# So "cat ./-file07" would read the file
+	#
+	# koReBOKuIDDepwhWk7jZC0RTdopnAYKh
+	#
+	# A more scalable solution could be "find /dir/to/search -type f | xargs file | grep text"
+	# Where <find> will give a list of files, <xargs file> will run <file> command on each of the lines from the piped input 
+
+
+bandit5 -> bandit6:
+	# Finding non executable files can be done with <!-executable> flag
+	# "-size 1033c" would yield only files 1033 bytes in size (<c> indicates it's a size in bytes)
+	# "-type f" would yield only human readable files
+	# So eventually we're only left with "./maybehere07/.file2" 
+	#
+	# DXjZPULLxYr17uwoI01bNLQbtFemEgo7
+
+
+bandit6 -> bandit7:
+	# Because the file is somewhere on the server and not in home directory, redirecting to root with "cd /"
+	# Then following with the command "find . -size 33c -group bandit6 -user bandit7 | grep bandit7"
+	# Where <-size>, <-group>, <-user> are specifying size, group and user (obviously)
+	# Going over the files, all but one are 'permission denied'
+	# Then using "cat ./var/lib/dpkg/info/bandit7.password" would read the file
+	#
+	#  HKBPTKQnIay4Fw76bEy8PVxKEDQRKTzs
+
+bandit7 -> bandit8:
+	# Using the command "grep -i millionth data.txt" will read the password
+	# <-i> flag indicating to ignore word case. In this case it would work without the flag, but generally it's good practice.
+	# 
+	# cvX2JJa4CFALtqS87jk27qwqGhBM9plV
+
+bandit8 -> bandit9:
+	# Using "cat data.txt | sort | uniq -u" will output the password
+	# Where <uniq -u> indicates to only present unique lines appearing only once
+	#
+	#  UsvVyFSfZZWbi6wgC7dAFyFuR6jQQUhR
+
+
+bandit9 -> bandit10:
+	# Using the <strings> command on 'data.txt' piped with 'grep '=' will reveal the password
+	# 
+	# truKLdjsbJ5g7yyJ2X2R0o3a5HQJFuLk
+
+bandit10 -> bandit11:
+	# Decoding a base64 data can be done with 'base64 -d' piped after 'cat data.txt'
+	# <-d> flag stands for decode
+	# 
+	# IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR
+
+
+bandit11 -> bandit12:
+	# This one is using an old cipher called ROT13
+	# Rotating it back can be done with <rt> command, counting 13 letters 
+	# cat data.txt | tr 'n-za-mN-ZA-M' 'a-zA-Z'
+	#
+	# 5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu
+
+
+bandit12 -> bandit13:
+	# After creating a new directory and copying the file
+	# Using <file> command indicates it's an ASCII file 
+	# Because we're told it's a hex dump of a file being repeatedly compressed we can use <xxd> command to reverse the file to it's original form
+	# like so: 'xxd -r ~/data.txt > data_copy.txt'
+	# <-r> flag stands for reverse and the arrow tells where to copy the file to.
+	#
+	# After using <file> again we can see it is now a gzip compressed data
+	# Decompressing it can be done with 'zcat data_copy.txt > data_1'
+	# where <zcat> is a command that can decompress files of type gzip 
+	#
+	# Using <file> once again shows us the new file is now a bzip2 compressed data
+	# Decompressing it can be done with the command 'bzip2 -d data_1.txt'
+	# where <-d> is for decompress
+	#
+	# The decompressed file will automatically be named data_1.out
+	# Using <file> will now show us it's again a gzip file
+	#
+	# After some decompressing these same types of compressions we get to a file of type POSIX tar archive
+	# Decompressing it could be done with <tar> command:
+	# 'tar -xvf data_2'
+	# <-xvf> is used to make the file extract to current directory
+	#
+	# The new extracted file will again be of the same type, using <tar> again will extract it
+	# 
+	# After that, it's required to repeat some of the same decompressions as been done so far
+	# Eventually we get to a file of type ASCII
+	# Using <cat> on it will reveal the password
+	#
+	# 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL
+
+
+bandit13 -> bandit14: 
+	# Instead of finding a password like levels before we need to use an ssh key to login to level 14
+	# Doing so can be done with <ssh> command using sshkey.private file as the key:
+	# 'ssh -i sshkey.private bandit14@localhost'
+	# <-i> tells that it should use the following file as a key. '' 
+	# @local host is used to indicate that it's in the same machine as we are in right now
+	#
+	# Then, navigating to /etc/bandit_pass and using <cat> to read bandit14 will reveal the password
+	#
+	# 4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e
+
+
+bandit14 -> bandit15:
+	# Submitting the password to localhost can be done with <nc> command, used to send raw data over the Internet 
+	# 'echo 4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e | nc localhost 30000'
+	# where the password is what we retrieved in the last level, echo is used to output the password and 30000 is the port required
+	#
+	# BfMYroe26WYalil77FoDi9qh59eK5xNr
+
+
+bandit15 -> bandit16:
+	# 
