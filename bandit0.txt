@@ -1,5 +1,5 @@
 bandit0 -> bandit1:
-	# Just logging in with "bandit1@bandit.labs.overthewire.org -p 2220"
+	# Just logging in with 'bandit1@bandit.labs.overthewire.org -p 2220'
 	# Where <bandit1> is the username and <-p> is for specifying a port, which is 2220 in this case.
 	#
 	# boJ9jbbUNNfktd78OOpsqOltutMc3MY1
@@ -7,65 +7,65 @@ bandit0 -> bandit1:
 
 bandit1 -> bandit2:
 	# Reading a file named - requires adding ./ before filename to specifically tell it's a file
-	# So "cat ./-" would read the file.
+	# So 'cat ./-' would read the file.
 	#
 	# CV1DtqXWVFXTvM2F0k09SHz0YwRINYA9
 
 
 bandit2 -> bandit3:
 	# Reading a filename with spaces requires adding a backslash after every word followed with a space character, to specify the next word is not a new command but a part of the filename.
-	# So "cat ./spaces\ in\ this\ filename" would read the file.
+	# So 'cat ./spaces\ in\ this\ filename' would read the file.
 	#
 	# UmHadQclWmgdLOKQ3YNgjWxGoRMb5luK
 
 
 bandit3 -> bandit4:
 	# Viewing a hidden file requires adding <-a> flag to the <ls> command
-	# "cd inhere" would redirect to the inhere directory 
-	# "ls -a" would  reveal a hidden file called '.hidden'
-	# "cat ./.hidden" would read the file
+	# 'cd inhere' would redirect to the inhere directory 
+	# 'ls -a' would  reveal a hidden file called '.hidden'
+	# 'cat ./.hidden' would read the file
 	#
 	# pIwrPrtPN36QITSp3EQaw936yaFoFgAB
 
 
 bandit4 -> bandit5:
 	# Finding a human readable file would mean finding an ASCII file
-	# "file ./*" would reveal the files in directory and their types
+	# 'file ./*' would reveal the files in directory and their types
 	# One file, named '-file07', is ASCII
-	# So "cat ./-file07" would read the file
+	# So 'cat ./-file07' would read the file
 	#
 	# koReBOKuIDDepwhWk7jZC0RTdopnAYKh
 	#
-	# A more scalable solution could be "find /dir/to/search -type f | xargs file | grep text"
+	# A more scalable solution could be 'find /dir/to/search -type f | xargs file | grep text'
 	# Where <find> will give a list of files, <xargs file> will run <file> command on each of the lines from the piped input 
 
 
 bandit5 -> bandit6:
 	# Finding non executable files can be done with <!-executable> flag
-	# "-size 1033c" would yield only files 1033 bytes in size (<c> indicates it's a size in bytes)
-	# "-type f" would yield only human readable files
-	# So eventually we're only left with "./maybehere07/.file2" 
+	# '-size 1033c' would yield only files 1033 bytes in size (<c> indicates it's a size in bytes)
+	# '-type f' would yield only human readable files
+	# So eventually we're only left with './maybehere07/.file2' 
 	#
 	# DXjZPULLxYr17uwoI01bNLQbtFemEgo7
 
 
 bandit6 -> bandit7:
-	# Because the file is somewhere on the server and not in home directory, redirecting to root with "cd /"
-	# Then following with the command "find . -size 33c -group bandit6 -user bandit7 | grep bandit7"
+	# Because the file is somewhere on the server and not in home directory, redirecting to root with 'cd /'
+	# Then following with the command 'find . -size 33c -group bandit6 -user bandit7 | grep bandit7'
 	# Where <-size>, <-group>, <-user> are specifying size, group and user (obviously)
 	# Going over the files, all but one are 'permission denied'
-	# Then using "cat ./var/lib/dpkg/info/bandit7.password" would read the file
+	# Then using 'cat ./var/lib/dpkg/info/bandit7.password' would read the file
 	#
 	#  HKBPTKQnIay4Fw76bEy8PVxKEDQRKTzs
 
 bandit7 -> bandit8:
-	# Using the command "grep -i millionth data.txt" will read the password
+	# Using the command 'grep -i millionth data.txt' will read the password
 	# <-i> flag indicating to ignore word case. In this case it would work without the flag, but generally it's good practice.
 	# 
 	# cvX2JJa4CFALtqS87jk27qwqGhBM9plV
 
 bandit8 -> bandit9:
-	# Using "cat data.txt | sort | uniq -u" will output the password
+	# Using 'cat data.txt | sort | uniq -u' will output the password
 	# Where <uniq -u> indicates to only present unique lines appearing only once
 	#
 	#  UsvVyFSfZZWbi6wgC7dAFyFuR6jQQUhR
