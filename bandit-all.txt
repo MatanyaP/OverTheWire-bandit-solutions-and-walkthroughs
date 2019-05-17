@@ -94,7 +94,7 @@ bandit11 -> bandit12:
 bandit12 -> bandit13:
 	# After creating a new directory and copying the file
 	# Using <file> command indicates it's an ASCII file 
-	# Because we're told it's a hex dump of a file being repeatedly compressed we can use <xxd> command to reverse the file to it's original form
+	# Because we're told it's a hex dump of a file being repeatedly compressed we can use <xxd> command to reverse the file to it's         # original form
 	# like so: 'xxd -r ~/data.txt > data_copy.txt'
 	# <-r> flag stands for reverse and the arrow tells where to copy the file to.
 	#
@@ -144,4 +144,36 @@ bandit14 -> bandit15:
 
 
 bandit15 -> bandit16:
+	# Using 'openssl s_client -connect localhost: 30001'
+	# where 'openssl s_client -connect' is a command usually used for testing https services
+	# and of course 'localhost' indicates we want to connect to current server and 30001 is the port we were told to use
+	#
+	# After that we are prompted to submit the password of the last level and we receive the password
+	#
+	# cluFn7wTiGryunymYOu4RcffSxQluehd
+
+
+bandit16 -> bandit17:
+	# Using the command 'nmap -p 31000-32000 localhost'
+	# where <nmap> command invokes a port scanning program, commonly used for pentesting  
+	# 31000-32000 is the range of ports we need to scan
 	# 
+	# Then we can see the message '31790/tcp open  unknown', that tells us 31790 is the port we need
+	# Using openssl s_client in a similar way to the last level will give us and ssl key
+	# 
+	# We will need to copy the key to /temp and create a new directory
+	# Then using <touch> command we create a new file, we'll call it key.pem
+	# 
+	# Using the command 'vi key.pem' will open the file in Vim editor
+	# When inside the file, typing <i> will switch to insert mode, where we can paste the ssh key we copied
+	# Pressing ESC will exit insert mode
+	# Then, typing ':wq' will save the file and quit
+	#
+	# Next, after trying unsuccessfully to log into level 17 with the key, we learn that it's needed to change file permissions
+	# This can be done with <chmod> command:
+	# 'chmod 600 key.pem'
+	# where 600 will grant reading, writing and executing permissions
+	#
+	# Now when we try to connect to level 17 it works
+	#
+	# xLYVMN9WE5zQ5vHacb0sZEVqbrp7nBTn
